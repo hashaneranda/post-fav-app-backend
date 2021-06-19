@@ -8,6 +8,7 @@
     "node": ">=12.0.0"
   },
   "scripts": {
+    "seed:dev": "cross-env NODE_ENV=development node src/seed/",
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
     "test": "jest -i",
@@ -35,6 +36,7 @@
     "http-status": "^1.4.0",
     "moment": "^2.24.0",
     "mongoose": "^5.7.7",
+    "mongoose-seed": "^0.6.0",
     "morgan": "^1.9.1",
     "pm2": "^4.1.2",
     "swagger-jsdoc": "^4.0.0",
