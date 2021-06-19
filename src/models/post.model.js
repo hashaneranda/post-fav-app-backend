@@ -3,6 +3,10 @@ const { toJSON } = require('./plugins');
 
 const commentSchema = mongoose.Schema({
   comment: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 });
 
 const postSchema = mongoose.Schema(
@@ -28,7 +32,12 @@ const postSchema = mongoose.Schema(
         type: String,
       },
     ],
+    likesCount: Number,
     comments: [commentSchema],
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
   {
     timestamps: true,
