@@ -5,15 +5,9 @@ const postController = require('../../controllers/post.controller');
 
 const router = express.Router();
 
-router
-  .route('/')
-  .post(validate(postValidation.register), postController.register)
-  .get(validate(postValidation.register), postController.register);
+router.route('/').get(postController.posts);
 
-router
-  .route('/fav')
-  .post(validate(postValidation.register), postController.register)
-  .get(validate(postValidation.register), postController.register);
+router.route('/fav').post(validate(postValidation.favorite), postController.addFavorites).get(postController.favorites);
 
 module.exports = router;
 
