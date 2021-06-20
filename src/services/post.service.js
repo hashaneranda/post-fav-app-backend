@@ -8,7 +8,32 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Post>}
  */
 const queryPosts = async () => {
-  const posts = await Post.find().populate('user').populate('comments.user');
+  const posts = await Post.aggregate([
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'user',
+        foreignField: '_id',
+        as: 'user',
+      },
+    },
+    { $unwind: '$user' },
+    {
+      $lookup: {
+        from: 'favorites',
+        localField: '_id',
+        foreignField: 'post',
+        as: 'user_liked',
+      },
+    },
+    {
+      $addFields: {
+        user_has_liked: {
+          $cond: [{ $eq: ['$user_liked', []] }, false, true],
+        },
+      },
+    },
+  ]);
   return posts;
 };
 
@@ -73,7 +98,31 @@ const createFavorite = async (body) => {
  * @returns {Promise<Favorite>}
  */
 const queryFavorites = async () => {
-  const posts = await Favorite.find().populate('post').populate('post.user');
+  const posts = await Favorite.aggregate([
+    {
+      $lookup: {
+        from: 'posts',
+        localField: 'post',
+        foreignField: '_id',
+        as: 'post',
+      },
+    },
+    { $unwind: '$post' },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'post.user',
+        foreignField: '_id',
+        as: 'post.user',
+      },
+    },
+    { $unwind: '$post.user' },
+    {
+      $addFields: {
+        'post.user_has_liked': true,
+      },
+    },
+  ]);
   return posts;
 };
 
